@@ -1,0 +1,44 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "actions": {
+            "Transform_XML": {
+                "type": "Xslt",
+                "inputs": {
+                    "content": "@triggerBody()",
+                    "map": {
+                        "source": "LogicApp",
+                        "name": "DEV-XML-JSON-Trans-Map.xslt"
+                    }
+                },
+                "runAfter": {}
+            },
+            "Response": {
+                "type": "Response",
+                "kind": "Http",
+                "inputs": {
+                    "statusCode": 200,
+                    "body": "@body('Transform_XML')"
+                },
+                "runAfter": {
+                    "Transform_XML": [
+                        "SUCCEEDED"
+                    ]
+                }
+            }
+        },
+        "contentVersion": "1.0.0.0",
+        "outputs": {},
+        "triggers": {
+            "When_a_HTTP_request_is_received": {
+                "type": "Request",
+                "kind": "Http",
+                "inputs": {
+                    "method": "POST"
+                }
+            }
+        },
+        "parameters": {}
+    },
+    "kind": "Stateful"
+}
